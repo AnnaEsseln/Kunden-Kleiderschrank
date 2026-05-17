@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/suche.js": {
+      "maxDuration": 60
+    }
+  }
+}

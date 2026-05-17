@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outfit-Finder | Foto-Shooting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --braun:#a26a25;
+    --braun-tief:#7d4f1a;
+    --beige-warm:#ebe7e2;
+    --beige-hell:#f5f1ec;
+    --weiss:#ffffff;
+    --tinte:#3a342c;
+    --tinte-soft:#7b7064;
+    --linie:#e4ddd0;
+    --schatten:0 14px 40px -22px rgba(58,52,44,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Jost',sans-serif;
+    color:var(--tinte);
+    background:var(--beige-hell);
+    background-image:
+      radial-gradient(circle at 20% -10%, rgba(162,106,37,.07), transparent 45%),
+      radial-gradient(circle at 95% 8%, rgba(162,106,37,.05), transparent 40%);
+    font-weight:300;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:64px 26px 110px;}
+
+  /* ---------- Kopf ---------- */
+  header{text-align:center;margin-bottom:58px;}
+  .eyebrow{
+    font-size:12px;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--braun);font-weight:500;margin-bottom:18px;
+  }
+  h1{
+    font-family:'Fraunces',serif;font-weight:400;
+    font-size:clamp(2.6rem,7vw,4rem);line-height:1.04;
+    color:var(--tinte);letter-spacing:-.01em;
+  }
+  h1 em{font-style:italic;color:var(--braun);}
+  .lede{
+    margin:20px auto 0;max-width:520px;color:var(--tinte-soft);
+    font-size:1.06rem;
+  }
+  .ziernaht{
+    width:46px;height:1px;background:var(--braun);
+    margin:30px auto 0;opacity:.55;
+  }
+
+  /* ---------- Schritte ---------- */
+  .step{margin-bottom:46px;}
+  .step-head{display:flex;align-items:baseline;gap:16px;margin-bottom:20px;}
+  .step-num{
+    font-family:'Fraunces',serif;font-size:1rem;color:var(--braun);
+    border:1px solid var(--braun);border-radius:50%;
+    width:38px;height:38px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--weiss);
+  }
+  .step-title{
+    font-family:'Fraunces',serif;font-weight:400;
+    font-size:1.5rem;color:var(--tinte);
+  }
+  .step-sub{font-size:.92rem;color:var(--tinte-soft);margin-top:2px;}
+
+  /* ---------- Auswahlkarten ---------- */
+  .grid{display:grid;gap:14px;}
+  .grid.cols2{grid-template-columns:repeat(2,1fr);}
+  .pick{
+    background:var(--weiss);border:1px solid var(--linie);
+    border-radius:6px;padding:20px 20px 18px;cursor:pointer;
+    transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;
+    position:relative;
+  }
+  .pick:hover{transform:translateY(-3px);box-shadow:var(--schatten);}
+  .pick.on{border-color:var(--braun);background:#fdfaf5;}
+  .pick.on::after{
+    content:"";position:absolute;top:14px;right:14px;
+    width:18px;height:18px;border-radius:50%;
+    background:var(--braun);
+    -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/></svg>") center/14px no-repeat;
+            mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/></svg>") center/14px no-repeat;
+  }
+  .pick-name{font-family:'Fraunces',serif;font-size:1.16rem;margin-bottom:4px;}
+  .pick-desc{font-size:.86rem;color:var(--tinte-soft);}
+  .swatches{display:flex;gap:7px;margin-top:13px;}
+  .swatches span{
+    width:26px;height:26px;border-radius:50%;
+    border:1px solid rgba(58,52,44,.12);
+  }
+
+  /* ---------- Budget ---------- */
+  .pills{display:flex;flex-wrap:wrap;gap:12px;}
+  .pill{
+    background:var(--weiss);border:1px solid var(--linie);
+    border-radius:40px;padding:13px 26px;cursor:pointer;
+    font-family:'Jost',sans-serif;font-size:1rem;font-weight:400;
+    color:var(--tinte);transition:all .22s ease;
+  }
+  .pill:hover{border-color:var(--braun);}
+  .pill.on{background:var(--braun);color:#fff;border-color:var(--braun);}
+
+  /* ---------- Personen ---------- */
+  .person-box{
+    background:var(--weiss);border:1px solid var(--linie);
+    border-radius:6px;padding:10px;
+  }
+  .person-row{
+    display:flex;gap:10px;align-items:center;
+    padding:8px;border-radius:5px;
+  }
+  .person-row + .person-row{border-top:1px solid var(--beige-warm);}
+  select,input[type=text]{
+    font-family:'Jost',sans-serif;font-size:.98rem;font-weight:300;
+    color:var(--tinte);background:var(--beige-hell);
+    border:1px solid var(--linie);border-radius:5px;
+    padding:11px 13px;outline:none;transition:border-color .2s ease;
+  }
+  select:focus,input[type=text]:focus{border-color:var(--braun);}
+  .p-role{flex:0 0 38%;}
+  .p-size{flex:1;min-width:0;}
+  .p-remove{
+    flex:none;width:38px;height:38px;border:none;cursor:pointer;
+    background:var(--beige-warm);border-radius:5px;color:var(--tinte-soft);
+    font-size:1.3rem;line-height:1;transition:all .2s ease;
+  }
+  .p-remove:hover{background:#e7d3bf;color:var(--braun-tief);}
+  .add-person{
+    margin-top:12px;background:none;border:1px dashed var(--braun);
+    color:var(--braun);font-family:'Jost',sans-serif;font-size:.95rem;
+    padding:11px;width:100%;border-radius:5px;cursor:pointer;
+    transition:background .2s ease;
+  }
+  .add-person:hover{background:#fdf6ec;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    font-family:'Jost',sans-serif;font-size:1rem;font-weight:400;
+    letter-spacing:.02em;cursor:pointer;border:none;border-radius:5px;
+    transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+  }
+  .btn-main{
+    background:var(--braun);color:#fff;padding:18px 40px;
+    font-size:1.08rem;box-shadow:0 12px 30px -14px rgba(162,106,37,.7);
+  }
+  .btn-main:hover{transform:translateY(-2px);background:var(--braun-tief);}
+  .btn-line{
+    background:var(--weiss);color:var(--braun);
+    border:1px solid var(--braun);padding:14px 28px;
+  }
+  .btn-line:hover{background:#fdf6ec;}
+  .btn-soft{
+    background:var(--beige-warm);color:var(--tinte);padding:13px 24px;
+  }
+  .btn-soft:hover{background:#e3d6c5;}
+  .center{text-align:center;}
+
+  .notice{
+    color:var(--braun-tief);font-size:.92rem;margin-top:14px;
+    min-height:1.2em;
+  }
+
+  /* ---------- Ergebnis ---------- */
+  #results{display:none;margin-top:24px;}
+  .res-top{
+    display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--linie);padding-top:40px;margin-bottom:8px;
+  }
+  .res-eyebrow{
+    font-size:12px;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--braun);font-weight:500;
+  }
+  .reset{
+    background:none;border:none;cursor:pointer;color:var(--tinte-soft);
+    font-family:'Jost',sans-serif;font-size:.88rem;
+    border-bottom:1px solid var(--linie);padding-bottom:2px;
+  }
+  .reset:hover{color:var(--braun);border-color:var(--braun);}
+
+  .block{margin-top:34px;}
+  .block-title{
+    font-family:'Fraunces',serif;font-weight:400;font-size:1.85rem;
+    color:var(--tinte);margin-bottom:6px;
+  }
+  .block-note{color:var(--tinte-soft);font-size:.96rem;margin-bottom:22px;max-width:560px;}
+
+  /* Kleiderschrank-Karten */
+  .closet-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
+    gap:18px;
+  }
+  .closet-card{
+    background:var(--weiss);border:1px solid var(--linie);
+    border-radius:6px;overflow:hidden;
+  }
+  .closet-card img{
+    width:100%;aspect-ratio:3/4;object-fit:cover;display:block;
+    background:var(--beige-warm);
+  }
+  .closet-body{padding:13px 14px 15px;}
+  .closet-name{font-family:'Fraunces',serif;font-size:1.04rem;line-height:1.3;}
+  .closet-meta{
+    display:flex;align-items:center;gap:7px;margin-top:7px;
+    font-size:.82rem;color:var(--tinte-soft);
+  }
+  .dot{width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.12);flex:none;}
+  .size-tag{
+    display:inline-block;margin-top:9px;font-size:.74rem;
+    letter-spacing:.04em;text-transform:uppercase;
+    background:var(--beige-hell);color:var(--braun-tief);
+    padding:4px 9px;border-radius:30px;
+  }
+
+  /* Internet-Outfit-Karten */
+  .outfit-card{
+    background:var(--weiss);border:1px solid var(--linie);
+    border-radius:6px;padding:24px 24px 22px;margin-bottom:16px;
+  }
+  .role-tag{
+    display:inline-block;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:#fff;background:var(--braun);
+    padding:5px 12px;border-radius:30px;margin-bottom:14px;
+  }
+  .outfit-title{font-family:'Fraunces',serif;font-size:1.32rem;margin-bottom:6px;}
+  .outfit-desc{color:var(--tinte-soft);font-size:.97rem;}
+  .outfit-meta{
+    display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;
+    margin:15px 0;font-size:.9rem;
+  }
+  .outfit-meta b{font-weight:500;color:var(--braun-tief);}
+  .shop-link{
+    display:inline-flex;align-items:center;gap:7px;
+    color:var(--braun);text-decoration:none;font-size:.95rem;
+    border-bottom:1px solid var(--braun);padding-bottom:2px;
+  }
+  .shop-link:hover{color:var(--braun-tief);border-color:var(--braun-tief);}
+  .outfit-tip{
+    margin-top:14px;padding-top:14px;border-top:1px solid var(--beige-warm);
+    font-style:italic;font-family:'Fraunces',serif;font-size:.96rem;
+    color:var(--tinte-soft);
+  }
+
+  /* Ladezustand */
+  .loading{display:flex;align-items:center;gap:12px;color:var(--tinte-soft);font-size:.95rem;}
+  .dots{display:flex;gap:6px;}
+  .dots span{
+    width:8px;height:8px;border-radius:50%;background:var(--braun);
+    animation:pulse 1.1s infinite ease-in-out;
+  }
+  .dots span:nth-child(2){animation-delay:.18s;}
+  .dots span:nth-child(3){animation-delay:.36s;}
+  @keyframes pulse{0%,100%{opacity:.25;transform:scale(.8);}50%{opacity:1;transform:scale(1);}}
+
+  /* Styling-Tipps */
+  .tips-card{
+    background:var(--weiss);border:1px solid var(--linie);
+    border-radius:6px;padding:30px 30px 26px;
+  }
+  .tip{display:flex;gap:14px;padding:13px 0;}
+  .tip + .tip{border-top:1px solid var(--beige-warm);}
+  .tip-mark{
+    font-family:'Fraunces',serif;color:var(--braun);font-size:1.05rem;
+    flex:none;width:26px;
+  }
+  .tip p{font-size:.98rem;}
+  .tools{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;}
+
+  footer{
+    text-align:center;margin-top:70px;color:var(--tinte-soft);
+    font-size:.82rem;letter-spacing:.04em;
+  }
+
+  /* ---------- Animation ---------- */
+  .reveal{opacity:0;transform:translateY(16px);animation:rise .7s ease forwards;}
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+
+  @media(max-width:560px){
+    .wrap{padding:42px 18px 80px;}
+    .grid.cols2{grid-template-columns:1fr;}
+    .p-role{flex:0 0 42%;}
+    .res-top{flex-direction:column;align-items:flex-start;gap:10px;}
+  }
+
+  /* ---------- Druck / PDF ---------- */
+  @media print{
+    body{background:#fff;}
+    .wrap{padding:0;max-width:100%;}
+    header,#input,.res-top,.reset,.btn,.add-person,.tools,#net-trigger,footer{display:none!important;}
+    #results{display:block!important;margin:0;}
+    .block,.outfit-card,.closet-card,.tips-card{
+      break-inside:avoid;box-shadow:none;
+    }
+    .reveal{opacity:1;transform:none;animation:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Foto-Shooting · Styling</div>
+    <h1>Der <em>Outfit-Finder</em></h1>
+    <p class="lede">In vier Schritten zum stimmigen Look für eure Bilder. Erst der Kundenkleiderschrank, dann passende Outfits aus dem Netz.</p>
+    <div class="ziernaht"></div>
+  </header>
+
+  <!-- ================= EINGABE ================= -->
+  <section id="input">
+
+    <div class="step">
+      <div class="step-head">
+        <div class="step-num">1</div>
+        <div><div class="step-title">Farbpalette wählen</div>
+        <div class="step-sub">Eine Farbwelt, die zur Stimmung der Bilder passt.</div></div>
+      </div>
+      <div class="grid cols2" id="palettes"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-head">
+        <div class="step-num">2</div>
+        <div><div class="step-title">Stilrichtung wählen</div>
+        <div class="step-sub">Der Charakter, den die Outfits tragen sollen.</div></div>
+      </div>
+      <div class="grid cols2" id="styles"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-head">
+        <div class="step-num">3</div>
+        <div><div class="step-title">Budget pro Person</div>
+        <div class="step-sub">Richtwert für die Outfit-Suche im Netz.</div></div>
+      </div>
+      <div class="pills" id="budgets"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-head">
+        <div class="step-num">4</div>
+        <div><div class="step-title">Personen hinzufügen</div>
+        <div class="step-sub">Wer wird fotografiert? Mit Kleidergröße, mehrfach möglich.</div></div>
+      </div>
+      <div class="person-box">
+        <div id="persons"></div>
+        <button class="add-person" id="addPerson">+ Person hinzufügen</button>
+      </div>
+    </div>
+
+    <div class="center">
+      <button class="btn btn-main" id="findBtn">Outfits finden</button>
+      <div class="notice" id="notice"></div>
+    </div>
+
+  </section>
+
+  <!-- ================= ERGEBNIS ================= -->
+  <section id="results">
+    <div class="res-top">
+      <div class="res-eyebrow">Eure Outfit-Empfehlung</div>
+      <button class="reset" id="resetBtn">Eingabe ändern</button>
+    </div>
+
+    <div id="closet-block"></div>
+    <div id="net-trigger"></div>
+    <div id="net-block"></div>
+    <div id="tips-block"></div>
+  </section>
+
+  <footer>Outfit-Finder · handmade-foto</footer>
+
+</div>
+
+<script>
+/* =================================================================
+   DATEN
+   ================================================================= */
+
+/* --- Kundenkleiderschrank (ausgelesen von handmade-foto.de) --- */
+const WARDROBE = [
+  {name:'Kleid Weiß',           farbe:'Weiß',         hex:'#f4f1ec', tag:'weiss', groesse:'Größe S',         hinweis:'Kleiner Bauch', img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9137-scaled.jpg'},
+  {name:'Kleid Nude',           farbe:'Nude',         hex:'#e3cdb8', tag:'nude',  groesse:'Universalgröße',  hinweis:'Bauch zeigbar', img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9125-scaled.jpg'},
+  {name:'Kleid Blau',           farbe:'Blau',         hex:'#9fb4c4', tag:'blau',  groesse:'Universalgröße',  hinweis:'',              img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9138-scaled.jpg'},
+  {name:'Kleid Rosé',           farbe:'Rosé',         hex:'#e4c4c4', tag:'rose',  groesse:'Universalgröße',  hinweis:'Großer Ausschnitt', img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9121-scaled-e1742379843923.jpg'},
+  {name:'Schlauchkleid Blau',   farbe:'Blau',         hex:'#9fb4c4', tag:'blau',  groesse:'Universalgröße',  hinweis:'',              img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9108-scaled.jpg'},
+  {name:'Schlauchkleid Blau / Weiß', farbe:'Blau / Weiß', hex:'#bcc9d2', tag:'blau', groesse:'Universalgröße', hinweis:'',           img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9112-1-scaled-e1742379758108.jpg'},
+  {name:'Schlauchkleid Beige',  farbe:'Beige',        hex:'#d6c7ad', tag:'beige', groesse:'Universalgröße',  hinweis:'',              img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9111-1-scaled-e1742379780540.jpg'},
+  {name:'Schlauchkleid Nude lang', farbe:'Nude',      hex:'#e3cdb8', tag:'nude',  groesse:'Universalgröße',  hinweis:'Ärmellos',      img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9116-scaled.jpg'},
+  {name:'Jumpsuit Weiß',        farbe:'Weiß',         hex:'#f4f1ec', tag:'weiss', groesse:'Größe S',         hinweis:'',              img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9133-scaled.jpg'},
+  {name:'Kleid Rosé Schimmer',  farbe:'Rosé',         hex:'#e4c4c4', tag:'rose',  groesse:'Universal bis L',  hinweis:'',              img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9127-scaled.jpg'},
+  {name:'Schlauchkleid Nude kurz', farbe:'Nude',     hex:'#e3cdb8', tag:'nude',  groesse:'Universalgröße',  hinweis:'Ärmellos',      img:'https://handmade-foto.de/wp-content/uploads/2025/03/IMG_9135-scaled.jpg'},
+  {name:'Kleid Rosé trägerlos', farbe:'Rosé',         hex:'#e4c4c4', tag:'rose',  groesse:'Universalgröße',  hinweis:'',              img:'https://handmade-foto.de/wp-content/uploads/2025/03/No4-scaled.jpg'}
+];
+
+/* --- Farbpaletten --- */
+const PALETTES = [
+  {id:'erdtoene', name:'Warme Erdtöne',      desc:'Sand, Caramel, Creme',          colors:['#ddc9a8','#b07d4a','#ede2cf','#9c6b3f'], match:['weiss','nude','beige'],      search:'beige'},
+  {id:'pastell',  name:'Zartes Pastell',      desc:'Puder, Creme, Salbei',          colors:['#e7cdd0','#efe6da','#c6d2dc','#c2cdb6'], match:['rose','nude','weiss','blau'], search:'rosé'},
+  {id:'neutrals', name:'Natürliche Neutrals',  desc:'Weiß, Greige, Taupe',           colors:['#faf6ef','#cabfae','#a89a86','#ddd0bc'], match:['weiss','beige','nude'],      search:'creme'},
+  {id:'helle',    name:'Klare Helligkeit',    desc:'Weiß, Hellblau, Hellgrau',      colors:['#ffffff','#c9d8e1','#d6d2cb','#ede6da'], match:['weiss','blau'],              search:'hellblau'},
+  {id:'tief',     name:'Tiefe Töne',          desc:'Waldgrün, Bordeaux, Navy',       colors:['#5a6650','#7c4a4a','#3f4a5a','#4a4742'], match:[],                            search:'dunkelgrün'},
+  {id:'bunt',     name:'Bunte Vielfalt',     desc:'Senf, Terrakotta, Petrol, Pflaume', colors:['#d4a13a','#c0552f','#2c6e6a','#6f3d5c'], match:['rose','blau'],              search:'bunt'}
+];
+
+/* --- Stilrichtungen --- */
+const STYLES = [
+  {name:'Natürlich & Leicht',     desc:'Echt, ungezwungen, ohne Inszenierung.'},
+  {name:'Klassisch & Elegant',    desc:'Klare Schnitte, gedeckte Töne, zeitlos.'},
+  {name:'Modern & Reduziert',     desc:'Wenige Farben, klare Linien, viel Ruhe.'},
+  {name:'Romantisch & Verspielt', desc:'Fließende Stoffe, weiche Töne, Bewegung.'},
+  {name:'Boho & Frei',            desc:'Leinen, Lagen, natürliche Details.'}
+];
+
+const BUDGETS = [30,50,100,200];
+const ROLES = ['Mama','Papa','Kind','Schwanger','Baby'];
+
+/* --- Kuratierte Empfehlungen (Fallback ohne Live-Suche) --- */
+const SHOP_URL = {
+  'Vinted':   t => 'https://www.vinted.de/catalog?search_text='+encodeURIComponent(t),
+  'H&M':      t => 'https://www2.hm.com/de_de/search-results.html?q='+encodeURIComponent(t),
+  'About You':t => 'https://www.aboutyou.de/suche?term='+encodeURIComponent(t),
+  'Zalando':  t => 'https://www.zalando.de/?q='+encodeURIComponent(t)
+};
+const FALLBACK = {
+  Mama:{
+    30:{shop:'Vinted',   titel:'Midikleid, Second Hand', beschreibung:'Ein schlichtes, fließendes Midikleid in einer ruhigen Farbe. Second Hand schont das Budget und sieht auf Fotos genauso edel aus.', suche:'midikleid damen',          tipp:'Achte auf weiche Stoffe wie Viskose oder Leinen, sie fallen schön.'},
+    50:{shop:'H&M',      titel:'Fließendes Midikleid',  beschreibung:'Ein einfarbiges Midikleid mit etwas Bewegung im Stoff. Klassisch und nie zu viel.',                                                  suche:'midikleid damen',          tipp:'Lieber unifarben als gemustert, das wirkt ruhiger.'},
+    100:{shop:'About You',titel:'Leinenkleid',          beschreibung:'Ein Leinenkleid in einem warmen Naturton. Wertig, leicht und perfekt fürs Shooting.',                                                  suche:'leinenkleid damen',        tipp:'Leinen darf leicht knittern, das gehört zum natürlichen Look.'},
+    200:{shop:'Zalando', titel:'Strick- oder Wickelkleid', beschreibung:'Ein hochwertiges Wickel- oder Feinstrickkleid, das die Figur sanft betont.',                                                       suche:'wickelkleid damen',        tipp:'Eine feine Kette als einziger Akzent, mehr braucht es nicht.'}
+  },
+  Papa:{
+    30:{shop:'Vinted',   titel:'Leinenhemd, Second Hand', beschreibung:'Ein helles Leinenhemd, locker getragen. Passt zu fast jeder Hose.',                          suche:'leinenhemd herren',  tipp:'Ärmel leicht hochkrempeln, das wirkt entspannt.'},
+    50:{shop:'H&M',      titel:'Hemd plus Chino',        beschreibung:'Ein schlichtes Hemd in einem Naturton, dazu eine Chino. Unaufgeregt und stimmig.',           suche:'leinenhemd herren',  tipp:'Hemd locker in die Hose stecken für einen klaren Look.'},
+    100:{shop:'About You',titel:'Leinenhemd plus Stoffhose', beschreibung:'Ein feines Leinenhemd mit locker fallender Stoffhose. Edel, ohne steif zu wirken.',         suche:'leinenhemd herren',  tipp:'Töne dich farblich an Mama an, nicht identisch, nur verwandt.'},
+    200:{shop:'Zalando', titel:'Hemd plus Feinstrick',   beschreibung:'Ein hochwertiges Hemd, optional mit feinem Strickpullover darüber. Ruhig und wertig.',         suche:'feinstrick herren',  tipp:'Ein Strickpulli über den Schultern wirkt warm und nahbar.'}
+  },
+  Kind:{
+    30:{shop:'Vinted',   titel:'Kinder-Outfit, Second Hand', beschreibung:'Kinder wachsen schnell, Second Hand ist hier ideal. Ein bequemes Teil in der Familienfarbe.', suche:'kinderkleidung',  tipp:'Bequem geht vor schick, ein entspanntes Kind lächelt mehr.'},
+    50:{shop:'H&M',      titel:'Latzhose oder Kleidchen', beschreibung:'Eine Latzhose mit Shirt oder ein einfaches Kleidchen in einem ruhigen Ton.',                    suche:'kinder kleid',    tipp:'Lieber keine großen Prints oder Comicfiguren.'},
+    100:{shop:'About You',titel:'Festliches Kinder-Outfit', beschreibung:'Ein etwas feineres Set in der Familienfarbe, trotzdem bequem zum Toben.',                       suche:'kinder festlich', tipp:'Naturmaterialien kratzen weniger, das Kind bleibt entspannt.'},
+    200:{shop:'Zalando', titel:'Hochwertiges Kinder-Set', beschreibung:'Ein wertiges Outfit, das farblich zum Rest der Familie passt und gut sitzt.',                    suche:'kinder outfit',   tipp:'Schuhe nicht vergessen, sie sind oft mit im Bild.'}
+  },
+  Schwanger:{
+    30:{shop:'Vinted',   titel:'Umstandskleid, Second Hand', beschreibung:'Ein Umstandskleid trägt man oft nur kurz, Second Hand lohnt sich besonders.',                suche:'umstandskleid',   tipp:'Ein Kleid wählen, das den Bauch betont statt versteckt.'},
+    50:{shop:'H&M',      titel:'Umstands-Midikleid',     beschreibung:'Ein fließendes Umstandskleid, das mitwächst und den Bauch sanft zeigt.',                         suche:'umstandskleid',   tipp:'Eng am Bauch, locker am Rest, das wirkt am schönsten.'},
+    100:{shop:'About You',titel:'Umstands-Maxikleid',    beschreibung:'Ein langes, fließendes Umstandskleid in einem warmen Ton. Romantisch und bequem.',              suche:'umstandskleid maxi', tipp:'Bewegung im Stoff sieht auf Fotos lebendig aus.'},
+    200:{shop:'Zalando', titel:'Umstands-Wickelkleid',   beschreibung:'Ein hochwertiges Wickelkleid, das sich dem Bauch anpasst und edel fällt.',                       suche:'umstandskleid wickel', tipp:'Barfuß oder mit zarten Sandalen wirkt es leicht.'}
+  },
+  Baby:{
+    30:{shop:'Vinted',   titel:'Baby-Set, Second Hand',  beschreibung:'Babys tragen Größen nur wenige Wochen, Second Hand ist hier am sinnvollsten.',                  suche:'baby set',        tipp:'Ein schlichter Body in einem Naturton ist eine sichere Wahl.'},
+    50:{shop:'H&M',      titel:'Strampler-Set',          beschreibung:'Ein weicher Strampler oder Body in einer ruhigen Farbe, abgestimmt auf die Familie.',           suche:'baby strampler',  tipp:'Keine kratzigen Bündchen, das Baby soll sich wohlfühlen.'},
+    100:{shop:'About You',titel:'Baby-Strickset',        beschreibung:'Ein feines Strickset in einem warmen Ton. Gemütlich und auf Fotos besonders zart.',             suche:'baby strickset',  tipp:'Ein Mulltuch in passender Farbe ist ein schönes Extra.'},
+    200:{shop:'Zalando', titel:'Hochwertiges Baby-Outfit', beschreibung:'Ein wertiges Set aus weichen Naturmaterialien, farblich passend zur Familie.',                 suche:'baby outfit',     tipp:'Weniger ist mehr, ein ruhiges Outfit lässt das Baby strahlen.'}
+  }
+};
+
+/* Tipps je Palette und Stil */
+const PALETTE_TIP = {
+  erdtoene:'Eure warmen Erdtöne wirken am besten, wenn jeder einen leicht anderen Ton trägt. Sand, Caramel und Creme nebeneinander geben dem Bild Tiefe.',
+  pastell:'Zarte Pastelltöne sehen am schönsten aus, wenn sie weich ineinander übergehen. Kombiniert sie mit viel Creme und Weiß.',
+  neutrals:'Natürliche Neutrals sind nie langweilig. Spielt mit verschiedenen Stofftexturen, dann entsteht Spannung ganz ohne Farbe.',
+  helle:'Helle, klare Töne wirken frisch und leicht. Ein einziger etwas kräftigerer Akzent verankert den Look.',
+  tief:'Tiefe Töne brauchen Ruhe. Setzt auf maximal zwei bis drei Farben und lasst die Stoffe wirken.',
+  bunt:'Bei einer bunten Palette gilt: lieber drei bis vier Farben festlegen und dabei bleiben. So wirkt es fröhlich und trotzdem stimmig.'
+};
+const STYLE_TIP = {
+  'Natürlich & Leicht':'Für einen natürlichen Look gilt: lieber etwas zu schlicht als zu viel. Echtheit schlägt Inszenierung.',
+  'Klassisch & Elegant':'Klassisch und elegant heißt klare Schnitte und gedeckte Töne. Zeitlos ist das Ziel, keine Experimente.',
+  'Modern & Reduziert':'Modern und reduziert lebt von Konsequenz. Wenige Farben, klare Linien, keine Ablenkung.',
+  'Romantisch & Verspielt':'Romantisch und verspielt darf weich sein: fließende Stoffe, zarte Töne, leichte Bewegung.',
+  'Boho & Frei':'Boho und frei verträgt Textur und Lagen. Leinen, Strick und ein paar natürliche Details, fertig.'
+};
+
+/* =================================================================
+   ZUSTAND
+   ================================================================= */
+const state = {palette:null, style:null, budget:null, persons:[]};
+
+/* =================================================================
+   EINGABE AUFBAUEN
+   ================================================================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Paletten */
+const palBox = $('#palettes');
+PALETTES.forEach(p=>{
+  const el=document.createElement('div');
+  el.className='pick';el.dataset.id=p.id;
+  el.innerHTML=`<div class="pick-name">${p.name}</div>
+    <div class="pick-desc">${p.desc}</div>
+    <div class="swatches">${p.colors.map(c=>`<span style="background:${c}"></span>`).join('')}</div>`;
+  el.onclick=()=>{state.palette=p.id;
+    palBox.querySelectorAll('.pick').forEach(x=>x.classList.remove('on'));
+    el.classList.add('on');};
+  palBox.appendChild(el);
+});
+
+/* Stile */
+const styBox = $('#styles');
+STYLES.forEach(s=>{
+  const el=document.createElement('div');
+  el.className='pick';
+  el.innerHTML=`<div class="pick-name">${s.name}</div><div class="pick-desc">${s.desc}</div>`;
+  el.onclick=()=>{state.style=s.name;
+    styBox.querySelectorAll('.pick').forEach(x=>x.classList.remove('on'));
+    el.classList.add('on');};
+  styBox.appendChild(el);
+});
+
+/* Budget */
+const budBox = $('#budgets');
+BUDGETS.forEach(b=>{
+  const el=document.createElement('button');
+  el.className='pill';el.textContent='bis '+b+' €';
+  el.onclick=()=>{state.budget=b;
+    budBox.querySelectorAll('.pill').forEach(x=>x.classList.remove('on'));
+    el.classList.add('on');};
+  budBox.appendChild(el);
+});
+
+/* Personen */
+const persBox = $('#persons');
+function addPersonRow(role){
+  const row=document.createElement('div');
+  row.className='person-row';
+  row.innerHTML=`
+    <select class="p-role">${ROLES.map(r=>`<option ${r===role?'selected':''}>${r}</option>`).join('')}</select>
+    <input type="text" class="p-size" placeholder="Kleidergröße, z.B. M / 38 / 116">
+    <button class="p-remove" title="Entfernen">&times;</button>`;
+  row.querySelector('.p-remove').onclick=()=>{
+    if(persBox.children.length>1) row.remove();
+  };
+  persBox.appendChild(row);
+}
+addPersonRow('Mama');
+$('#addPerson').onclick=()=>addPersonRow('Mama');
+
+/* =================================================================
+   SUCHE STARTEN
+   ================================================================= */
+$('#findBtn').onclick=()=>{
+  const note=$('#notice');note.textContent='';
+  if(!state.palette){note.textContent='Bitte wähle in Schritt 1 eine Farbpalette.';return;}
+  if(!state.style){note.textContent='Bitte wähle in Schritt 2 eine Stilrichtung.';return;}
+  if(!state.budget){note.textContent='Bitte wähle in Schritt 3 ein Budget.';return;}
+  state.persons=[...persBox.querySelectorAll('.person-row')].map(r=>({
+    role:r.querySelector('.p-role').value,
+    size:r.querySelector('.p-size').value.trim()
+  }));
+  renderResults();
+};
+
+$('#resetBtn').onclick=()=>{
+  $('#results').style.display='none';
+  $('#input').scrollIntoView({behavior:'smooth'});
+};
+
+/* =================================================================
+   ERGEBNIS RENDERN
+   ================================================================= */
+function renderResults(){
+  const res=$('#results');
+  res.style.display='block';
+  ['#closet-block','#net-trigger','#net-block','#tips-block'].forEach(s=>$(s).innerHTML='');
+
+  const matches=matchWardrobe();
+
+  if(matches.length){
+    renderCloset(matches);
+    renderNetTrigger();
+  }else{
+    // Kleiderschrank leer für diese Auswahl -> direkt zur Internetsuche
+    setTimeout(runInternetSearch,500);
+  }
+  res.scrollIntoView({behavior:'smooth'});
+}
+
+/* --- Kleiderschrank durchsuchen --- */
+function matchWardrobe(){
+  const hasWoman=state.persons.some(p=>p.role==='Mama'||p.role==='Schwanger');
+  if(!hasWoman) return [];
+  const pal=PALETTES.find(p=>p.id===state.palette);
+  return WARDROBE.filter(item=>pal.match.includes(item.tag));
+}
+
+function renderCloset(items){
+  const block=$('#closet-block');
+  const hasPreg=state.persons.some(p=>p.role==='Schwanger');
+  const fuer=hasPreg?'die werdende Mama':'Mama';
+  block.innerHTML=`
+    <div class="block reveal">
+      <h2 class="block-title">Kundenkleiderschrank</h2>
+      <p class="block-note">${items.length} Kleider passen farblich zu eurer Palette und eignen sich für ${fuer}. Direkt vor Ort verfügbar, ganz ohne Kauf.</p>
+      <div class="closet-grid">
+        ${items.map((it,i)=>`
+          <div class="closet-card reveal" style="animation-delay:${0.06*i}s">
+            <img src="${it.img}" alt="${esc(it.name)}" loading="lazy">
+            <div class="closet-body">
+              <div class="closet-name">${esc(it.name)}</div>
+              <div class="closet-meta"><span class="dot" style="background:${it.hex}"></span>${esc(it.farbe)}${it.hinweis?' · '+esc(it.hinweis):''}</div>
+              <span class="size-tag">${esc(it.groesse)}</span>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+/* --- Button zur Internetsuche --- */
+function renderNetTrigger(){
+  const t=$('#net-trigger');
+  t.innerHTML=`
+    <div class="block reveal center" style="margin-top:38px">
+      <button class="btn btn-line" id="netBtn">Weiter zur Internetsuche</button>
+      <p class="block-note" style="margin:14px auto 0">Findet passende Outfits aus DACH-Shops für jede Person, abgestimmt auf Palette und Budget.</p>
+    </div>`;
+  $('#netBtn').onclick=runInternetSearch;
+}
+
+/* =================================================================
+   INTERNETSUCHE
+   ================================================================= */
+async function runInternetSearch(){
+  $('#net-trigger').innerHTML='';
+  const block=$('#net-block');
+  block.innerHTML=`
+    <div class="block reveal">
+      <h2 class="block-title">Outfits aus dem Netz</h2>
+      <p class="block-note">Für jede Person ein passendes Outfit aus einem DACH-Shop, im Rahmen eures Budgets.</p>
+      <div id="net-cards"></div>
+    </div>`;
+  const cards=$('#net-cards');
+  const cache={};
+
+  for(let i=0;i<state.persons.length;i++){
+    const person=state.persons[i];
+    const key=person.role+'|'+person.size;
+
+    const card=document.createElement('div');
+    card.className='outfit-card reveal';
+    card.innerHTML=`
+      <span class="role-tag">${esc(person.role)}${person.size?' · Gr. '+esc(person.size):''}</span>
+      <div class="loading"><span class="dots"><span></span><span></span><span></span></span>
+      <span>Durchsucht DACH-Shops...</span></div>`;
+    cards.appendChild(card);
+
+    let outfit;
+    if(cache[key]){
+      outfit=cache[key];
+    }else{
+      try{ outfit=await fetchOutfit(person); }
+      catch(e){ outfit=fallbackOutfit(person); }
+      cache[key]=outfit;
+    }
+    person._outfit=outfit;
+    card.innerHTML=outfitCardHTML(person,outfit);
+  }
+
+  renderTips();
+}
+
+/* --- Suche via /api/suche --- */
+async function fetchOutfit(person){
+  const pal=PALETTES.find(p=>p.id===state.palette);
+  const r=await fetch('/api/suche',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      role:person.role,
+      size:person.size||'offen',
+      palette:{name:pal.name,desc:pal.desc},
+      style:state.style,
+      budget:state.budget
+    })
+  });
+  if(!r.ok) throw new Error('api');
+  const obj=await r.json();
+  if(obj.error||!obj.titel||!obj.url) throw new Error('parse');
+  return obj;
+}
+
+/* --- Kuratierter Fallback --- */
+function fallbackOutfit(person){
+  const pal=PALETTES.find(p=>p.id===state.palette);
+  const t=FALLBACK[person.role][state.budget];
+  const term=pal.search+' '+t.suche;
+  return {
+    titel:t.titel,
+    beschreibung:t.beschreibung,
+    shop:t.shop,
+    preis:'bis '+state.budget+' €',
+    url:SHOP_URL[t.shop](term),
+    tipp:t.tipp
+  };
+}
+
+function outfitCardHTML(person,o){
+  return `
+    <span class="role-tag">${esc(person.role)}${person.size?' · Gr. '+esc(person.size):''}</span>
+    <div class="outfit-title">${esc(o.titel)}</div>
+    <div class="outfit-desc">${esc(o.beschreibung)}</div>
+    <div class="outfit-meta">
+      <span><b>Shop:</b> ${esc(o.shop)}</span>
+      <span><b>Preis:</b> ${esc(o.preis)}</span>
+    </div>
+    <a class="shop-link" href="${esc(o.url)}" target="_blank" rel="noopener">Im Shop ansehen &rarr;</a>
+    ${o.tipp?`<div class="outfit-tip">${esc(o.tipp)}</div>`:''}`;
+}
+
+/* =================================================================
+   STYLING-TIPPS + WERKZEUGE
+   ================================================================= */
+function buildTips(){
+  const pal=PALETTES.find(p=>p.id===state.palette);
+  const hasKid=state.persons.some(p=>p.role==='Kind'||p.role==='Baby');
+  const tips=[
+    'Bleibt in einer Farbfamilie. Variiert Helligkeit und Ton, statt dass alle dasselbe Teil tragen. Das wirkt harmonisch und nicht uniform.',
+    PALETTE_TIP[pal.id],
+    STYLE_TIP[state.style],
+    'Verzichtet auf große Logos, grelle Muster und Neonfarben. Sie ziehen den Blick von euren Gesichtern weg.',
+    'Stimmt die Stoffe aufeinander ab. Leinen, Strick und Baumwolle fotografieren ruhig und edel.'
+  ];
+  if(hasKid) tips.push('Bei den Kleinen geht Komfort vor Style. Ein bequemes Kind lacht mehr, und genau das wollen wir auf den Bildern.');
+  tips.push('Ein Akzent pro Person reicht völlig. Eine Kette, ein Hut oder eine Strickjacke, mehr braucht es nicht.');
+  return tips;
+}
+
+function renderTips(){
+  const tips=buildTips();
+  $('#tips-block').innerHTML=`
+    <div class="block reveal" style="margin-top:38px">
+      <h2 class="block-title">Styling-Tipps</h2>
+      <p class="block-note">Damit am Shooting-Tag alles zusammenpasst.</p>
+      <div class="tips-card">
+        ${tips.map((t,i)=>`<div class="tip"><div class="tip-mark">0${i+1}</div><p>${t}</p></div>`).join('')}
+      </div>
+      <div class="tools">
+        <button class="btn btn-soft" id="copyBtn">Als Text kopieren</button>
+        <button class="btn btn-soft" id="pdfBtn">Als PDF speichern</button>
+      </div>
+    </div>`;
+  $('#copyBtn').onclick=copyPlan;
+  $('#pdfBtn').onclick=()=>window.print();
+}
+
+function copyPlan(){
+  const pal=PALETTES.find(p=>p.id===state.palette);
+  let txt='OUTFIT-PLAN FUERS FOTO-SHOOTING\n\n';
+  txt+='Farbpalette: '+pal.name+' ('+pal.desc+')\n';
+  txt+='Stilrichtung: '+state.style+'\n';
+  txt+='Budget pro Person: bis '+state.budget+' Euro\n';
+
+  const matches=matchWardrobe();
+  if(matches.length){
+    txt+='\nKUNDENKLEIDERSCHRANK\n';
+    matches.forEach(m=>{txt+=' - '+m.name+' ('+m.farbe+', '+m.groesse+')\n';});
+  }
+  txt+='\nOUTFITS AUS DEM NETZ\n';
+  state.persons.forEach(p=>{
+    const o=p._outfit;
+    txt+='\n'+p.role+(p.size?' (Gr. '+p.size+')':'')+':\n';
+    if(o){
+      txt+='  '+o.titel+'\n  '+o.beschreibung+'\n';
+      txt+='  Shop: '+o.shop+' | Preis: '+o.preis+'\n  Link: '+o.url+'\n';
+      if(o.tipp) txt+='  Tipp: '+o.tipp+'\n';
+    }
+  });
+  txt+='\nSTYLING-TIPPS\n';
+  buildTips().forEach((t,i)=>{txt+=(i+1)+'. '+t+'\n';});
+
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=$('#copyBtn');const o=b.textContent;
+    b.textContent='Kopiert';setTimeout(()=>b.textContent=o,1800);
+  }).catch(()=>{
+    const b=$('#copyBtn');b.textContent='Kopieren nicht möglich';
+  });
+}
+</script>
+</body>
+</html>
